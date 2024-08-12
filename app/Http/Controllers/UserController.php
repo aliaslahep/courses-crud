@@ -7,12 +7,17 @@ use App\Models\Users;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-class HomeController extends Controller
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Redirect;
+
+class UserController extends Controller
 {
 
-    public function index() {
+    public function register_page() {
 
-        return view("home");
+        return view("register");
 
     }
 
@@ -22,9 +27,9 @@ class HomeController extends Controller
 
             "first_name"=> ['required'],
             "last_name"=> 'nullable|min:2',
-            "phone_number"=> 'required|integer|regex:/^[0-9]{10}$/',
+            "phone_number"=> 'required|unique:users,phone_number|numeric|regex:/^[0-9]{10}$/',
             "email"=> 'required|email|unique:users,email',
-            "username"=> 'required',
+            "username"=> 'required|unique:users,username',
             "password"=> 'required|min:6|regex:/^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[@$!%*?&])[A-Za-z0-9_@#$%&*]{6,}$/',
             "confirm_password"=> 'required_with:password|same:password'
         ],[
@@ -35,8 +40,7 @@ class HomeController extends Controller
         ]);
 
         if ($validator->fails()) {
-            $errors = $validator->errors();
-            return redirect()->back()->withErrors($errors)->withInput();
+            return redirect()->back()->withErrors($validator)->withInput();
         } 
 
 
@@ -47,11 +51,44 @@ class HomeController extends Controller
         $user->phone_number = $request->phone_number;
         $user->username = $request->username;
         $user->email = $request->email;
-        $user->password = bcrypt($request->password);
+        $user->password =  Hash::make($request->password);
 
         $user->save();  
 
-        return redirect()->route('login',['id'=>$user->id]);
+        return redirect()->intended('/login');
 
+    }
+
+    
+    public function login() {
+
+        return view("login");
+
+    }
+
+    public function users_login(Request $request) {
+
+        $username = $request->input('username');
+        $password = $request->input('password');
+
+        $checkLogin = DB::table('users')->where(['username'=>$username,'password'=>$password])->first();
+
+        if(!empty($checkLogin)) {
+            session(['user' => $checkLogin]);
+            return view('home')->with(['username'=>$checkLogin->username]);
+
+        }
+
+        else {
+    
+            echo "unsuccess";
+    
+        }
+    }
+
+
+    public function courses_create(){
+
+        return view("courses-create");
     }
 }

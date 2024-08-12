@@ -1,28 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    
+
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
 </head>
+
 <body>
-    <h1>User registration</h1>
-    <form action="{{url('/add_user')}}" method="post" class="m-5">
+    <h1>Create course</h1>
+
+    <form action="{{url('/add_course')}}" method="post" enctype="multipart/form-data" class="m-5">
 
         @csrf
-        <div class="form-group">
-            First name :
-            <input type="text" name="first_name" value="{{old('first_name')}}" class="m-3 form-control">
-            @if($errors->has('first_name'))
-                <span class="small text-danger">{{ $errors->first('first_name') }}</span><br>
-            @endif
-        </div>
-        <div class="form-group">
-            Last name :
-            <input type="text" name="last_name" value="{{old('last_name')}}" class="m-3 form-control">
-            @if($errors->has('last_name'))
-                <span class="small text-danger">{{ $errors->first('last_name') }}</span><br>
-            @endif
-        </div>
+        Title :
+        <input type="text" name="title" value="{{old('title')}}" class="m-3 form-control">
+        @if($errors->has('title'))
+            <span class="small text-danger">{{ $errors->first('title') }}</span><br>
+        @endif
+
+        Last name :
+        <input type="text" name="last_name" value="{{old('last_name')}}" class="m-3 form-control">
+        @if($errors->has('last_name'))
+            <span class="small text-danger">{{ $errors->first('last_name') }}</span><br>
+        @endif
 
         Phone Number :
         <input type="text" name="phone_number" value="{{old('phone_number')}}" class="m-3 form-control">
@@ -58,6 +59,6 @@
         <input type="submit" name="" class="btn btn-primary m-5" >
     </center>
     </form>
-    
+       
 </body>
 </html>
