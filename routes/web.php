@@ -12,7 +12,7 @@ Route::get('/login', [UserController::class, 'login']);
 Route::post('/users_login', [UserController::class, 'users_login']);
 
 Route::get('/courses-create', [UserController::class, 'courses_create']);
+Route::post('/add_course', [UserController::class, 'add_course']);
 
-
-
+Route::get('/home', [UserController::class,'home']);
 

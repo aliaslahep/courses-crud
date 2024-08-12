@@ -1,33 +1,33 @@
 <?php
 
-namespace App\Http\Controllers;
+    namespace App\Http\Controllers;
 
-use App\Models\Users;
+    use App\Models\Users;
+    use App\Models\Courses;
 
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Redirect;
+    use Illuminate\Http\Request;
+    use Illuminate\Support\Facades\Validator;
+    use Illuminate\Support\Facades\Hash;
+    use Illuminate\Support\Facades\DB;
+    use Illuminate\Support\Facades\Storage;
 
-class UserController extends Controller
-{
+    class UserController extends Controller
+    {
 
-    public function register_page() {
+        public function register_page() {
 
-        return view("register");
+            return view("register");
 
-    }
+        }
 
-    public function add_user(Request $request) {
+        public function add_user(Request $request) {
 
-        $validator = Validator::make($request->all(), [
+            $validator = Validator::make($request->all(), [
 
             "first_name"=> ['required'],
             "last_name"=> 'nullable|min:2',
-            "phone_number"=> 'required|unique:users,phone_number|numeric|regex:/^[0-9]{10}$/',
+            "phone_number"=> 'required|unique:users,phone_number|integer|regex:/^[0-9]{10}$/',
             "email"=> 'required|email|unique:users,email',
             "username"=> 'required|unique:users,username',
             "password"=> 'required|min:6|regex:/^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[@$!%*?&])[A-Za-z0-9_@#$%&*]{6,}$/',
@@ -55,7 +55,7 @@ class UserController extends Controller
 
         $user->save();  
 
-        return redirect()->intended('/login');
+        return redirect()->intended('/login')->with('success','Entered Successfully');
 
     }
 
@@ -91,4 +91,50 @@ class UserController extends Controller
 
         return view("courses-create");
     }
+
+    public function add_course(Request $request){
+        
+
+        $validator = Validator::make($request->all(), [
+            "title"=>'required',
+            "content"=>'required',
+            "category"=>'required',
+            "thumbnail"=>'required|mimes:png,jpg,jpeg'
+        ]);
+
+
+        if($validator->fails()){
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+
+        $courses = new Courses();
+        $courses->title = $request->title;
+        $courses->content = $request->content;
+        $courses->category = $request->category;
+        
+        $image = $request->thumbnail;
+        $year = date('Y');
+        $month = date('m');
+        $day = date('d');
+        if(!file_exists("images/$year/$month/$day")){
+
+            mkdir("images/$year/$month/$day",0777,true);
+
+        }
+        
+        $request->thumbnail->move("image/$year/$month/$day",$image);
+
+        $courses->thumbnail = $image;
+
+        $courses->save();
+
+        return redirect()->intended('/home')->with("success","enetered successfully");
+
+    }
+
+    public function home(){
+
+        return view('home');
+    }
 }
+?>

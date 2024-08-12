@@ -19,42 +19,48 @@
             <span class="small text-danger">{{ $errors->first('title') }}</span><br>
         @endif
 
-        Last name :
-        <input type="text" name="last_name" value="{{old('last_name')}}" class="m-3 form-control">
-        @if($errors->has('last_name'))
-            <span class="small text-danger">{{ $errors->first('last_name') }}</span><br>
+        Content :
+        <textarea name="content" class="m-3 form-control">{{old('content')}}</textarea>
+        @if($errors->has('content'))
+            <span class="small text-danger">{{ $errors->first('content') }}</span><br>
         @endif
 
-        Phone Number :
-        <input type="text" name="phone_number" value="{{old('phone_number')}}" class="m-3 form-control">
-        @if($errors->has('phone_number'))
-            <span class="small text-danger">{{ $errors->first('phone_number') }}</span><br>
+       Category :
+       <select name="category" value="{{old('category')}}" class="m-3 form-control">
+            <option value="1" {{old('category')==1 ? "selected":""}}>Computer Science</option>
+            <option value="2" {{old('category')==2 ? "selected":""}}>Information technology</option>
+            <option value="3" {{old('category')==3 ? "selected":""}}>Electrical</option>
+       </select>
+        @if($errors->has('category'))
+            <span class="small text-danger">{{ $errors->first('category') }}</span><br>
         @endif
 
-        Username :
-        <input type="text" name="username" value="{{old('username')}}" class="m-3 form-control">
-        @if($errors->has('username'))
-            <span class="small text-danger">{{ $errors->first('username') }}</span><br>
+        Thumbnail :
+        <input type="file" name="thumbnail" class="m-3 form-control">
+        @if($errors->has('thumbnail'))
+            <span class="small text-danger">{{ $errors->first('thumbnail') }}</span><br>
         @endif
 
-        Email:
-        <input type="text" name="email" value="{{old('email')}}" class="m-3 form-control">
-        @if($errors->has('email'))
-            <span class="small text-danger">{{ $errors->first('email') }}</span><br>
+        Tags:
+        <div class="checkbox_container" name="tags" id="tags" style="display:flex"> 
+            <input type="checkbox" name="tag[]" value="{{old('tag[]')}}" class="m-3 form-control"> <p style="margin: 20px 10px 10px -80px ">HTML</p>
+            <input type="checkbox" name="tag[]" value="{{old('tag[]')}}" class="m-3 form-control"> <p style="margin: 20px 10px 10px -80px ">CSS</p>
+            <input type="checkbox" name="tag[]" value="{{old('tag[]')}}" class="m-3 form-control"> <p style="margin: 20px 10px 10px -80px ">Javascript</p>
+            <input type="checkbox" name="tag[]" value="{{old('tag[]')}}" class="m-3 form-control"> <p style="margin: 20px 10px 10px -80px ">Malayalam</p>
+            <input type="checkbox" name="tag[]" value="{{old('tag[]')}}" class="m-3 form-control"> <p style="margin: 20px 10px 10px -80px ">English</p>
+        </div>
+
+        @if($errors->has('tag[]'))
+            <span class="small text-danger">{{ $errors->first('tag[]') }}</span><br>
         @endif
         
         
-        Password:
-        <input type="password" name="password" class="m-3 form-control">
-        @if($errors->has('password'))
-            <span class="small text-danger">{{ $errors->first('password') }}</span><br>
+        Pdf:
+        <input type="file" name="file[]" class="m-3 form-control" multiple>
+        @if($errors->has('file'))
+            <span class="small text-danger">{{ $errors->first('file') }}</span><br>
         @endif
         
-        Confirm Password:
-        <input type="password" name="confirm_password" class="m-3 form-control  ">
-        @if($errors->has('confirm_password'))
-            <span class="small text-danger">{{ $errors->first('confirm_password') }}</span><br>
-        @endif
     <center>
         <input type="submit" name="" class="btn btn-primary m-5" >
     </center>
