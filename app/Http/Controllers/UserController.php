@@ -197,8 +197,10 @@
     }
 
     public function courses_display() {
+        
+        $get_table = DB::table('courses')->orderBy('id', 'asc')->Paginate(3,['*'],'users');
 
-        return view('courses-display');
+        return view('courses-display',compact('get_table'));
     }
 
 

@@ -5,6 +5,8 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     @php
 
+        $i=0;
+
         $user = session()->get('user');
 
         $user_id = $user->id;
@@ -30,7 +32,7 @@
             </div>
         </div>
 
-        <table class="table table-bordered">
+        <table class="table table-bordered ">
             <thead class="thead-dark">
             <tr class="">
                 <th>SI.No</th>
@@ -44,14 +46,18 @@
             @foreach($get_table as $get)
                 
                 @php
+
+                    $i++;
+                
                     $category_id = $get->category;
+                
                     $get_table = DB::table('categories')->where(['id'=>$category_id])->first();
 
                 @endphp
                 
                 <tr>
                     
-                    <td>{{$get->id}}</td>
+                    <td>{{$i}}</td>
                     <td>{{$get->title}}</td>
                     <td>{{$get_table->category}}</td>
                     <td><a href="{{ url('/courses_update') }}?id={{ $get->id }}"><input type="button" name="update" value="Update" class="btn btn-primary"></a></td>
