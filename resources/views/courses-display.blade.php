@@ -43,7 +43,15 @@
             
 
         </table>
-        {{ $get_table->links() }}
+        
+        <div class="d-flex justify-content-center ">
+            {{ $get_table->links('pagination::bootstrap-4') }}
+        </div>
+
+        <div class="buttons" style="display: flex;justify-content:space-around;margin-top:50px;">
+            <a href="home" ><input type="button" value="My Courses" ></a>
+            <a href="courses_display"><input type="button" value="Courses"></a>
+        </div>
         
 </body>
 </html>

@@ -68,8 +68,9 @@
         </table>
        
         <a href="courses-create"><input type="button" value="Add course" class="btn btn-success m-5"></a><br>
+        
         <div class="buttons" style="display: flex;justify-content:space-around;margin-top:50px;">
-            <a href="courses-create" ><input type="button" value="My Courses" ></a>
+            <a href="home" ><input type="button" value="My Courses" ></a>
             <a href="courses_display"><input type="button" value="Courses"></a>
         </div>
     @endif
