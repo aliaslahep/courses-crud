@@ -2,6 +2,7 @@
 
     namespace App\Http\Controllers;
 
+    use App\Models\CourseTags;
     use App\Models\Users;
     use App\Models\Courses;
 
@@ -99,7 +100,9 @@
             "title"=>'required',
             "content"=>'required',
             "category"=>'required',
-            "thumbnail"=>'required|mimes:png,jpg,jpeg'
+            "thumbnail"=>'required|mimes:png,jpg,jpeg',
+            'tag' => 'required|array',
+            'tag.*' => 'required|string|max:255'
         ]);
 
 
@@ -128,6 +131,26 @@
 
         $courses->save();
 
+        echo $courses->id;
+
+        $course_id = $courses->id;  
+
+        $tags = $request->input('tag');
+        
+        
+        foreach($tags as $tag) {
+        
+            \DB::table('course_tags')->insert([
+        
+                'tag_id' => $tag,
+        
+                'course_id' => $course_id
+        
+            ]);
+        
+        }
+        
+
         return redirect()->intended('/home')->with("success","enetered successfully");
 
     }
@@ -135,6 +158,7 @@
     public function home(){
 
         return view('home');
+
     }
 }
 ?>

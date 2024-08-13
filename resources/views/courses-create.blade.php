@@ -37,17 +37,20 @@
 
         Thumbnail :
         <input type="file" name="thumbnail" class="m-3 form-control">
+        
         @if($errors->has('thumbnail'))
+            
             <span class="small text-danger">{{ $errors->first('thumbnail') }}</span><br>
+        
         @endif
 
         Tags:
         <div class="checkbox_container" name="tags" id="tags" style="display:flex"> 
-            <input type="checkbox" name="tag[]" value="{{old('tag[]')}}" class="m-3 form-control"> <p style="margin: 20px 10px 10px -80px ">HTML</p>
-            <input type="checkbox" name="tag[]" value="{{old('tag[]')}}" class="m-3 form-control"> <p style="margin: 20px 10px 10px -80px ">CSS</p>
-            <input type="checkbox" name="tag[]" value="{{old('tag[]')}}" class="m-3 form-control"> <p style="margin: 20px 10px 10px -80px ">Javascript</p>
-            <input type="checkbox" name="tag[]" value="{{old('tag[]')}}" class="m-3 form-control"> <p style="margin: 20px 10px 10px -80px ">Malayalam</p>
-            <input type="checkbox" name="tag[]" value="{{old('tag[]')}}" class="m-3 form-control"> <p style="margin: 20px 10px 10px -80px ">English</p>
+            <input type="checkbox" name="tag[]" value="1" class="m-3 form-control" {{ in_array(1, old('tag', [])) ? 'checked' : '' }}> <p style="margin: 20px 10px 10px -80px ">HTML</p>
+            <input type="checkbox" name="tag[]" value="2" class="m-3 form-control" {{ in_array(2, old('tag', [])) ? 'checked' : '' }}> <p style="margin: 20px 10px 10px -80px ">CSS</p>
+            <input type="checkbox" name="tag[]" value="3" class="m-3 form-control" {{ in_array(3, old('tag', [])) ? 'checked' : '' }}> <p style="margin: 20px 10px 10px -80px ">Javascript</p>
+            <input type="checkbox" name="tag[]" value="4" class="m-3 form-control" {{ in_array(4, old('tag', [])) ? 'checked' : '' }}> <p style="margin: 20px 10px 10px -80px ">Malayalam</p>
+            <input type="checkbox" name="tag[]" value="5" class="m-3 form-control" {{ in_array(5, old('tag', [])) ? 'checked' : '' }}> <p style="margin: 20px 10px 10px -80px ">English</p>
         </div>
 
         @if($errors->has('tag[]'))
