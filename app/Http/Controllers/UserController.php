@@ -5,6 +5,7 @@
     use App\Models\CourseTags;
     use App\Models\Users;
     use App\Models\Courses;
+    use App\Models\User;
 
 
     use Illuminate\Http\Request;
@@ -12,6 +13,7 @@
     use Illuminate\Support\Facades\Hash;
     use Illuminate\Support\Facades\DB;
     use Illuminate\Support\Facades\Storage;
+    use Illuminate\Support\Facades\Auth;
 
     class UserController extends Controller
     {
@@ -72,11 +74,11 @@
         $username = $request->input('username');
         $password = $request->input('password');
 
-        $checkLogin = DB::table('users')->where(['username'=>$username,'password'=>$password])->first();
+        $check_login = DB::table('users')->where(['username'=>$username,'password'=>$password])->first();
 
-        if(!empty($checkLogin)) {
-            session(['user' => $checkLogin]);
-            return view('home')->with(['username'=>$checkLogin->username]);
+        if(!empty($check_login)) {
+            session(['user' => $check_login]);
+            return view('home')->with(['username'=>$check_login->username]);
 
         }
 
@@ -85,12 +87,19 @@
             echo "unsuccess";
     
         }
+    
     }
 
 
     public function courses_create(){
 
-        return view("courses-create");
+        $user = session()->get('user');
+
+        $categories = \DB::table('categories')->get();
+
+        $tags = \DB::table('tags')->get(); 
+
+        return view("courses-create",compact('tags','categories','user'));
     }
 
     public function add_course(Request $request){
@@ -100,9 +109,10 @@
             "title"=>'required',
             "content"=>'required',
             "category"=>'required',
-            "thumbnail"=>'required|mimes:png,jpg,jpeg',
+            "thumbnail"=>'required|mimes:png,jpg,jpeg|max:10240',
             'tag' => 'required|array',
-            'tag.*' => 'required|string|max:255'
+            'tag.*' => 'required|string|max:255',
+            "file" => "required|mimes:pdf|max:10240"
         ]);
 
 
@@ -110,15 +120,19 @@
             return redirect()->back()->withErrors($validator)->withInput();
         }
 
+        $user = session()->get('user');
+
         $courses = new Courses();
         $courses->title = $request->title;
         $courses->content = $request->content;
         $courses->category = $request->category;
+        $courses->user_id = $user->id;
         
         $image = $request->thumbnail;
         $year = date('Y');
         $month = date('m');
         $day = date('d');
+
         if(!file_exists("images/$year/$month/$day")){
 
             mkdir("images/$year/$month/$day",0777,true);
@@ -130,8 +144,6 @@
         $courses->thumbnail = $image;
 
         $courses->save();
-
-        echo $courses->id;
 
         $course_id = $courses->id;  
 
@@ -149,7 +161,25 @@
             ]);
         
         }
+
+        $file = $request->file;
+
+        if(!file_exists("pdf/$year/$month/$day")){
+
+            mkdir("pdf/$year/$month/$day",0777,true);
+
+        }
         
+        $request->file->move("pdf/$year/$month/$day",$file);
+
+        \DB::table("course_files")->insert([
+
+            'file' => $file,
+
+            'course_id' => $course_id
+
+        ]);
+
 
         return redirect()->intended('/home')->with("success","enetered successfully");
 
@@ -160,5 +190,17 @@
         return view('home');
 
     }
+
+    public function courses_update(){
+
+        return view('courses-update');
+    }
+
+    public function courses_display() {
+
+        return view('courses-display');
+    }
+
+
 }
 ?>
