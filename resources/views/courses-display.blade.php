@@ -1,3 +1,31 @@
+@php
+
+    $user = session()->get('user');
+
+    $ipaddress = $_SERVER["REMOTE_ADDR"];
+
+    $url = $_SERVER['REQUEST_URI'];
+
+    date_default_timezone_set('Asia/Calcutta'); 
+
+    $access_log = date('YmdHis');
+
+    $user_id = $user->id;
+
+    $add_log = DB::table('access_logs')->insert([
+        
+        'ip_address' => $ipaddress,
+
+        'username' => $user_id,
+
+        'url' => $url,
+
+        'access_log' => $access_log
+
+]);  
+
+@endphp
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -12,7 +40,13 @@
 
 </head>
 <body>
-    <h1>List Courses</h1>
+    <div class="nav" style="display: flex;justify-content: space-between">
+        <h1>List Courses</h1>
+        <div class="left_nav" style="display: flex;justify-content: space-around">
+            <h3 style="margin: 16px 20px">{{ session('user')->username }}</h3>
+            <a href="/logout"><input type="button" value="Logout" style="margin: 20px 20px"></a>
+        </div>
+    </div>
     <table class="table table-bordered">
         <thead class="thead-dark">
         <tr class="">

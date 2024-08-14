@@ -9,12 +9,6 @@
 
 <body>
 
-    @if(session('success'))
-        <div class="alert alert-success">
-            {{ session('success') }}
-        </div>
-    @endif
-
     <h1>User registration</h1>
     <form action="{{url('/users_login')}}" method="post" class="m-5 pl-5 pr-5">
 

@@ -20,6 +20,10 @@
 
         public function register_page() {
 
+            if (session('user')) {
+                return redirect('/home');
+            }
+
             return view("register");
 
         }
@@ -65,6 +69,10 @@
     
     public function login() {
 
+        if (session('user')) {
+            return redirect('/home');
+        }
+
         return view("login");
 
     }
@@ -103,6 +111,8 @@
     }
 
     public function add_course(Request $request){
+
+        
         
 
         $validator = Validator::make($request->all(), [
@@ -128,7 +138,8 @@
         $courses->category = $request->category;
         $courses->user_id = $user->id;
         
-        $image = $request->thumbnail;
+        $image = $request->file('thumbnail');
+        $imagename = date('YmdHis').'thumbnail.'. $image->getClientOriginalExtension();
         $year = date('Y');
         $month = date('m');
         $day = date('d');
@@ -139,9 +150,9 @@
 
         }
         
-        $request->thumbnail->move("image/$year/$month/$day",$image);
+        $request->thumbnail->move("images/$year/$month/$day",$imagename);
 
-        $courses->thumbnail = $image;
+        $courses->thumbnail = $imagename;
 
         $courses->save();
 
@@ -164,17 +175,19 @@
 
         $file = $request->file;
 
+        $filename = date('YmdHis').'file.'. $file->getClientOriginalExtension();
+
         if(!file_exists("pdf/$year/$month/$day")){
 
             mkdir("pdf/$year/$month/$day",0777,true);
 
         }
         
-        $request->file->move("pdf/$year/$month/$day",$file);
+        $request->file->move("pdf/$year/$month/$day",$filename);
 
         \DB::table("course_files")->insert([
 
-            'file' => $file,
+            'file' => $filename,
 
             'course_id' => $course_id
 
@@ -191,9 +204,48 @@
 
     }
 
-    public function courses_update(){
+    public function courses_update( $id){
 
-        return view('courses-update');
+        $get_course = DB::table('courses')->where('id',$id)->first();
+
+        $categories = DB::table('categories')->get();
+        
+        $tags = DB::table('tags')->get();
+
+        return view('courses-update',compact('get_course','categories','tags'));
+    }
+
+    public function update_course(Request $request, $id){
+
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'content' => 'required|string',
+            'category' => 'required|',
+        ]);
+
+        $get_course = DB::table('courses')->where('id',$id)->update([
+            'title' => $request->title,
+            'content' => $request->content,
+            'category' => $request->category
+        ]);
+
+        if ($get_course) {
+
+            return redirect()->intended('/home')->with("success","Course updated successfully");
+        
+        } else {
+            
+            return redirect()->intended('/home')->with('error','No changes');  
+        }
+
+    }
+
+    public function courses_delete($id){
+
+        $del_course = DB::table('courses')->where('id',$id)->delete(); 
+
+        return redirect()->back()->with('success','');
+
     }
 
     public function courses_display() {
@@ -203,6 +255,19 @@
         return view('courses-display',compact('get_table'));
     }
 
+    public function access_login(){
 
+        $get_access_log = DB::table('access_logs')->get();
+        
+        $get_username = DB::table('users')->get();
+
+
+        return view('access-log',compact('get_access_log','get_username'));
+    }
+
+    public function filter_log() {
+
+        
+    }
 }
 ?>

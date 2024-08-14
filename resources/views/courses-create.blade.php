@@ -1,4 +1,31 @@
-<!DOCTYPE html>
+@php
+
+    $ipaddress = $_SERVER["REMOTE_ADDR"];
+
+    $url = $_SERVER['REQUEST_URI'];
+
+    date_default_timezone_set('Asia/Calcutta'); 
+
+    $access_log = date('YmdHis');
+
+    $user = session()->get('user');
+
+    $user_id = $user->id;
+
+    $add_log = DB::table('access_logs')->insert([
+        
+        'ip_address' => $ipaddress,
+
+        'username' => $user_id,
+
+        'url' => $url,
+
+        'access_log' => $access_log
+
+]);  
+
+@endphp
+
 <html lang="en">
 
 <head>
